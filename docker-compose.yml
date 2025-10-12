@@ -1,0 +1,61 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nba
+      POSTGRES_USER: nba
+      POSTGRES_PASSWORD: nba
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    # do not expose publicly; accessible on docker network only
+    # ports: ["11434:11434"]
+    volumes:
+      - ollamavol:/root/.ollama
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ollama list >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    command: /bin/sh -c "ollama serve & sleep 5 && ollama pull nomic-embed-text && ollama pull llama3.2:3b && wait"
+
+  app:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app/backend
+      - ./part4:/app/part4
+      - ./part1:/app/part1
+    # Keep API internal; exposed via proxy
+    # ports:
+    #   - "8000:8000"
+    environment:
+      - DB_DSN=postgresql://nba:nba@db:5432/nba
+    depends_on:
+      db:
+        condition: service_started
+      ollama:
+        condition: service_started
+
+  proxy:
+    build: ./proxy
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    environment:
+      - CADDY_EMAIL=you@example.com
+
+volumes:
+  pgdata:
+  ollamavol:

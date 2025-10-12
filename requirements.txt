@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+psycopg2-binary
+sqlalchemy
+pgvector
+pandas
+numpy
+requests
+orjson
+pydantic
+transformers
+torch
+accelerate>=0.26.0

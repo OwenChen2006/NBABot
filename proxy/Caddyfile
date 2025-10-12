@@ -1,0 +1,16 @@
+# Replace yourdomain.com with your real domain(s)
+# Caddy will automatically obtain and renew TLS certs via Let's Encrypt
+
+yourdomain.com {
+  root * /srv/frontend
+  encode gzip zstd
+  file_server
+
+  @api path /api/*
+  reverse_proxy @api app:8000
+}
+
+api.yourdomain.com {
+  encode gzip zstd
+  reverse_proxy app:8000
+}

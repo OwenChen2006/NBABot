@@ -1,0 +1,44 @@
+<div class="w-full min-h-screen flex items-center justify-center p-4" style="font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);">
+  <div class="chat-container w-full max-w-md h-[80vh] flex flex-col rounded-xl overflow-hidden shadow-xl">
+    <div class="chat-header p-4 flex items-center space-x-3" style="background: linear-gradient(90deg, #17408B 0%, #1D428A 100%); color: white;">
+      <img src="https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg" alt="NBA Logo" class="nba-logo w-10 h-10 rounded-full">
+      <div>
+        <h1 class="text-xl font-bold" style="font-family: 'Bebas Neue', sans-serif;">NBA CHATBOT</h1>
+        <p class="text-xs opacity-80">Ask me anything about basketball!</p>
+      </div>
+    </div>
+
+    <div class="chat-messages flex-1 p-4 overflow-y-auto bg-gray-50 space-y-3">
+      <div class="bot-message p-3 max-w-[80%] bg-white rounded-[18px] shadow">
+        <p>Hey there! 🏀 I'm your NBA assistant. Ask me about players, stats, teams, or anything basketball related!</p>
+      </div>
+
+      <ng-container *ngFor="let m of messages">
+        <div [ngClass]="m.sender === 'user' ? 'ml-auto bg-[#17408B] text-white' : 'bg-white'" class="p-3 max-w-[80%] rounded-[18px]" [style.border-radius]="m.sender==='user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px'">
+          <p>{{ m.text }}</p>
+          <div *ngIf="m.evidence?.length" class="mt-2 text-xs opacity-70">
+            <div *ngFor="let ev of m.evidence">• {{ ev.home || ev.table }} vs {{ ev.away }} — {{ ev.score }} ({{ ev.date }})</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="typing-indicator p-2" [class.hidden]="!isLoading">
+      <div class="flex space-x-1 pl-3">
+        <span class="w-2 h-2 rounded-full animate-pulse" style="background-color:#C9082A"></span>
+        <span class="w-2 h-2 rounded-full animate-pulse delay-75" style="background-color:#C9082A"></span>
+        <span class="w-2 h-2 rounded-full animate-pulse delay-150" style="background-color:#C9082A"></span>
+      </div>
+    </div>
+
+    <form (ngSubmit)="sendMessage()" class="chat-input p-3 bg-white border-t flex items-center space-x-2">
+      <input [(ngModel)]="userInput" name="userInput" placeholder="Ask about NBA..." class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button class="send-btn p-2 rounded-lg text-white" type="submit" style="background-color:#C9082A">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>

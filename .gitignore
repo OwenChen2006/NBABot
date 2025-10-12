@@ -1,0 +1,43 @@
+# Node
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+# Mac
+.DS_Store
+# Angular build
+frontend/dist/
+# Data/artifacts
+*.safetensors
+*.pt
+*.bin
+*.pth
+*.csv
+part4/results/
+part4/fine-tuned-model/
+backend/data/
+# Docker
+*.tar
+# VSCode
+.vscode/
+# Others
+coverage/
+.tmp/
+.tmp/**
+
+
+
+
+part3/responses.txt
+part4/dataset.json
+part4/evaluation_results.json
+part4/responses.txt
